@@ -13493,7 +13493,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var children = [];
-      var cols = Array(3).fill(null);
+      var cols = Array(4).fill(null);
       var rows = 12 / cols.length;
 
       var _loop_1 = function _loop_1(row) {
