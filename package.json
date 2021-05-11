@@ -1,4 +1,5 @@
 {
+  "name": "pp-vuetify",
   "private": true,
   "workspaces": [
     "packages/*"
