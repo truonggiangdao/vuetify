@@ -30,7 +30,7 @@ export default mixins(
       const cols = Array(3).fill(null)
       const rows = 12 / cols.length
 
-      for (let row = 0; row < rows; row++) {
+      for (let row = 0; row <= rows; row++) {
         const tds = cols.map((_, col) => {
           const month = row * cols.length + col
           const date = `${this.displayedYear}-${pad(month + 1)}`
