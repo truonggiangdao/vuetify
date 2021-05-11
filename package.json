@@ -1,5 +1,5 @@
 {
-  "name": "pp-vuetify",
+  name": "vuetify",
   "private": true,
   "workspaces": [
     "packages/*"
