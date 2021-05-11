@@ -34,7 +34,7 @@ export default mixins(
     },
     genTBody() {
       const children = [];
-      const cols = Array(3).fill(null);
+      const cols = Array(4).fill(null);
       const rows = 12 / cols.length;
 
       for (let row = 0; row < rows; row++) {
