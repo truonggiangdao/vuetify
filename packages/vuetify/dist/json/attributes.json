@@ -4995,6 +4995,10 @@
     "type": "boolean",
     "description": "Detaches the menu content inside of the component as opposed to the document."
   },
+  "v-menu/is-sub-activated": {
+    "type": "boolean",
+    "description": ""
+  },
   "v-menu/left": {
     "type": "boolean",
     "description": "Aligns the component towards the left."

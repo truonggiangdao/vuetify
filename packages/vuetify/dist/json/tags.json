@@ -1611,6 +1611,7 @@
       "eager",
       "fixed",
       "internal-activator",
+      "is-sub-activated",
       "left",
       "light",
       "max-height",
