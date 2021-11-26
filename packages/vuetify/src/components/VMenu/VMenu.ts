@@ -1,31 +1,31 @@
 // Styles
-import './VMenu.sass';
+import './VMenu.sass'
 
 // Components
-import { VThemeProvider } from '../VThemeProvider';
+import { VThemeProvider } from '../VThemeProvider'
 
 // Mixins
-import Activatable from '../../mixins/activatable';
-import Delayable from '../../mixins/delayable';
-import Dependent from '../../mixins/dependent';
-import Detachable from '../../mixins/detachable';
-import Menuable from '../../mixins/menuable';
-import Returnable from '../../mixins/returnable';
-import Roundable from '../../mixins/roundable';
-import Toggleable from '../../mixins/toggleable';
-import Themeable from '../../mixins/themeable';
+import Activatable from '../../mixins/activatable'
+import Delayable from '../../mixins/delayable'
+import Dependent from '../../mixins/dependent'
+import Detachable from '../../mixins/detachable'
+import Menuable from '../../mixins/menuable'
+import Returnable from '../../mixins/returnable'
+import Roundable from '../../mixins/roundable'
+import Toggleable from '../../mixins/toggleable'
+import Themeable from '../../mixins/themeable'
 
 // Directives
-import ClickOutside from '../../directives/click-outside';
-import Resize from '../../directives/resize';
+import ClickOutside from '../../directives/click-outside'
+import Resize from '../../directives/resize'
 
 // Utilities
-import mixins from '../../util/mixins';
-import { removed } from '../../util/console';
-import { convertToUnit, keyCodes } from '../../util/helpers';
+import mixins from '../../util/mixins'
+import { removed } from '../../util/console'
+import { convertToUnit, keyCodes } from '../../util/helpers'
 
 // Types
-import { VNode, VNodeDirective, VNodeData } from 'vue';
+import { VNode, VNodeDirective, VNodeData } from 'vue'
 
 const baseMixins = mixins(
   Dependent,
@@ -36,7 +36,7 @@ const baseMixins = mixins(
   Roundable,
   Toggleable,
   Themeable
-);
+)
 
 /* @vue/component */
 export default baseMixins.extend({
@@ -52,7 +52,7 @@ export default baseMixins.extend({
       isInMenu: true,
       // Pass theme through to default slot
       theme: this.theme
-    };
+    }
   },
 
   props: {
@@ -101,36 +101,36 @@ export default baseMixins.extend({
       resizeTimeout: 0,
       selectedIndex: null as null | number,
       tiles: [] as HTMLElement[]
-    };
+    }
   },
 
   computed: {
     activeTile(): HTMLElement | undefined {
-      return this.tiles[this.listIndex];
+      return this.tiles[this.listIndex]
     },
     calculatedLeft(): string {
       const menuWidth = Math.max(
         this.dimensions.content.width,
         parseFloat(this.calculatedMinWidth)
-      );
+      )
 
-      if (!this.auto) return this.calcLeft(menuWidth) || '0';
+      if (!this.auto) return this.calcLeft(menuWidth) || '0'
 
       return (
         convertToUnit(this.calcXOverflow(this.calcLeftAuto(), menuWidth)) || '0'
-      );
+      )
     },
     calculatedMaxHeight(): string {
-      const height = this.auto ? '200px' : convertToUnit(this.maxHeight);
+      const height = this.auto ? '200px' : convertToUnit(this.maxHeight)
 
-      return height || '0';
+      return height || '0'
     },
     calculatedMaxWidth(): string {
-      return convertToUnit(this.maxWidth) || '0';
+      return convertToUnit(this.maxWidth) || '0'
     },
     calculatedMinWidth(): string {
       if (this.minWidth) {
-        return convertToUnit(this.minWidth) || '0';
+        return convertToUnit(this.minWidth) || '0'
       }
 
       const minWidth = Math.min(
@@ -138,23 +138,23 @@ export default baseMixins.extend({
           Number(this.nudgeWidth) +
           (this.auto ? 16 : 0),
         Math.max(this.pageWidth - 24, 0)
-      );
+      )
 
       const calculatedMaxWidth = isNaN(parseInt(this.calculatedMaxWidth))
         ? minWidth
-        : parseInt(this.calculatedMaxWidth);
+        : parseInt(this.calculatedMaxWidth)
 
-      return convertToUnit(Math.min(calculatedMaxWidth, minWidth)) || '0';
+      return convertToUnit(Math.min(calculatedMaxWidth, minWidth)) || '0'
     },
     calculatedTop(): string {
       const top = !this.auto
         ? this.calcTop()
-        : convertToUnit(this.calcYOverflow(this.calculatedTopAuto));
+        : convertToUnit(this.calcYOverflow(this.calculatedTopAuto))
 
-      return top || '0';
+      return top || '0'
     },
     hasClickableTiles(): boolean {
-      return Boolean(this.tiles.find(tile => tile.tabIndex > -1));
+      return Boolean(this.tiles.find(tile => tile.tabIndex > -1))
     },
     styles(): object {
       return {
@@ -165,63 +165,63 @@ export default baseMixins.extend({
         left: this.calculatedLeft,
         transformOrigin: this.origin,
         zIndex: this.zIndex || this.activeZIndex
-      };
+      }
     }
   },
 
   watch: {
     isActive(val) {
-      if (!val) this.listIndex = -1;
+      if (!val) this.listIndex = -1
     },
     isContentActive(val) {
-      this.hasJustFocused = val;
+      this.hasJustFocused = val
     },
     listIndex(next, prev) {
       if (next in this.tiles) {
-        const tile = this.tiles[next];
-        tile.classList.add('v-list-item--highlighted');
-        this.$refs.content.scrollTop = tile.offsetTop - tile.clientHeight;
+        const tile = this.tiles[next]
+        tile.classList.add('v-list-item--highlighted')
+        this.$refs.content.scrollTop = tile.offsetTop - tile.clientHeight
       }
 
       prev in this.tiles &&
-        this.tiles[prev].classList.remove('v-list-item--highlighted');
+        this.tiles[prev].classList.remove('v-list-item--highlighted')
     }
   },
 
   created() {
     /* istanbul ignore next */
     if (this.$attrs.hasOwnProperty('full-width')) {
-      removed('full-width', this);
+      removed('full-width', this)
     }
   },
 
   mounted() {
-    this.isActive && this.callActivate();
+    this.isActive && this.callActivate()
   },
 
   methods: {
     activate() {
       // Update coordinates and dimensions of menu
       // and its activator
-      this.updateDimensions();
+      this.updateDimensions()
       // Start the transition
       requestAnimationFrame(() => {
         // Once transitioning, calculate scroll and top position
         this.startTransition().then(() => {
           if (this.$refs.content) {
-            this.calculatedTopAuto = this.calcTopAuto();
+            this.calculatedTopAuto = this.calcTopAuto()
             this.auto &&
-              (this.$refs.content.scrollTop = this.calcScrollPosition());
+              (this.$refs.content.scrollTop = this.calcScrollPosition())
           }
-        });
-      });
+        })
+      })
     },
     calcScrollPosition() {
-      const $el = this.$refs.content;
+      const $el = this.$refs.content
       const activeTile = $el.querySelector(
         '.v-list-item--active'
-      ) as HTMLElement;
-      const maxScrollTop = $el.scrollHeight - $el.offsetHeight;
+      ) as HTMLElement
+      const maxScrollTop = $el.scrollHeight - $el.offsetHeight
 
       return activeTile
         ? Math.min(
@@ -233,101 +233,101 @@ export default baseMixins.extend({
                 activeTile.offsetHeight / 2
             )
           )
-        : $el.scrollTop;
+        : $el.scrollTop
     },
     calcLeftAuto() {
-      return parseInt(this.dimensions.activator.left - this.defaultOffset * 2);
+      return parseInt(this.dimensions.activator.left - this.defaultOffset * 2)
     },
     calcTopAuto() {
-      const $el = this.$refs.content;
+      const $el = this.$refs.content
       const activeTile = $el.querySelector(
         '.v-list-item--active'
-      ) as HTMLElement | null;
+      ) as HTMLElement | null
 
       if (!activeTile) {
-        this.selectedIndex = null;
+        this.selectedIndex = null
       }
 
       if (this.offsetY || !activeTile) {
-        return this.computedTop;
+        return this.computedTop
       }
 
-      this.selectedIndex = Array.from(this.tiles).indexOf(activeTile);
+      this.selectedIndex = Array.from(this.tiles).indexOf(activeTile)
 
       const tileDistanceFromMenuTop =
-        activeTile.offsetTop - this.calcScrollPosition();
+        activeTile.offsetTop - this.calcScrollPosition()
       const firstTileOffsetTop = ($el.querySelector(
         '.v-list-item'
-      ) as HTMLElement).offsetTop;
+      ) as HTMLElement).offsetTop
 
       return (
         this.computedTop - tileDistanceFromMenuTop - firstTileOffsetTop - 1
-      );
+      )
     },
     changeListIndex(e: KeyboardEvent) {
       // For infinite scroll and autocomplete, re-evaluate children
-      this.getTiles();
+      this.getTiles()
 
       if (!this.isActive || !this.hasClickableTiles) {
-        return;
+        return
       } else if (e.keyCode === keyCodes.tab) {
-        this.isActive = false;
-        return;
+        this.isActive = false
+        return
       } else if (e.keyCode === keyCodes.down) {
-        this.nextTile();
+        this.nextTile()
       } else if (e.keyCode === keyCodes.up) {
-        this.prevTile();
+        this.prevTile()
       } else if (e.keyCode === keyCodes.end) {
-        this.lastTile();
+        this.lastTile()
       } else if (e.keyCode === keyCodes.home) {
-        this.firstTile();
+        this.firstTile()
       } else if (e.keyCode === keyCodes.enter && this.listIndex !== -1) {
-        this.tiles[this.listIndex].click();
+        this.tiles[this.listIndex].click()
       } else {
-        return;
+        return
       }
       // One of the conditions was met, prevent default action (#2988)
-      e.preventDefault();
+      e.preventDefault()
     },
     closeConditional(e: Event) {
-      const target = e.target as HTMLElement;
+      const target = e.target as HTMLElement
 
       return (
         this.isActive &&
         !this._isDestroyed &&
         this.closeOnClick &&
         !this.$refs.content.contains(target)
-      );
+      )
     },
     genActivatorAttributes() {
       const attributes = Activatable.options.methods.genActivatorAttributes.call(
         this
-      );
+      )
 
       if (this.activeTile && this.activeTile.id) {
         return {
           ...attributes,
           'aria-activedescendant': this.activeTile.id
-        };
+        }
       }
 
-      return attributes;
+      return attributes
     },
     genActivatorListeners() {
       const listeners = Menuable.options.methods.genActivatorListeners.call(
         this
-      );
+      )
 
       if (!this.disableKeys) {
-        listeners.keydown = this.onKeyDown;
+        listeners.keydown = this.onKeyDown
       }
 
-      return listeners;
+      return listeners
     },
     genTransition(): VNode {
-      const content = this.genContent();
+      const content = this.genContent()
 
-      if (!this.transition) return content;
+      if (!this.transition) return content
 
       return this.$createElement(
         'transition',
@@ -337,7 +337,7 @@ export default baseMixins.extend({
           }
         },
         [content]
-      );
+      )
     },
     genDirectives(): VNodeDirective[] {
       const directives: VNodeDirective[] = [
@@ -345,7 +345,7 @@ export default baseMixins.extend({
           name: 'show',
           value: this.isContentActive
         }
-      ];
+      ]
 
       // Do not add click outside for hover menu
       if (!this.openOnHover && this.closeOnClick) {
@@ -353,15 +353,15 @@ export default baseMixins.extend({
           name: 'click-outside',
           value: {
             handler: () => {
-              this.isActive = false;
+              this.isActive = false
             },
             closeConditional: this.closeConditional,
             include: () => [this.$el, ...this.getOpenDependentElements()]
           }
-        });
+        })
       }
 
-      return directives;
+      return directives
     },
     genContent(): VNode {
       const options = {
@@ -383,153 +383,153 @@ export default baseMixins.extend({
         ref: 'content',
         on: {
           click: (e: Event) => {
-            const target = e.target as HTMLElement;
+            const target = e.target as HTMLElement
 
-            if (target.getAttribute('disabled')) return;
-            if (this.closeOnContentClick) this.isActive = false;
+            if (target.getAttribute('disabled')) return
+            if (this.closeOnContentClick) this.isActive = false
           },
           keydown: this.onKeyDown
         }
-      } as VNodeData;
+      } as VNodeData
 
       if (this.$listeners.scroll) {
-        options.on = options.on || {};
-        options.on.scroll = this.$listeners.scroll;
+        options.on = options.on || {}
+        options.on.scroll = this.$listeners.scroll
       }
 
       if (!this.disabled && this.openOnHover) {
-        options.on = options.on || {};
-        options.on.mouseenter = this.mouseEnterHandler;
+        options.on = options.on || {}
+        options.on.mouseenter = this.mouseEnterHandler
       }
 
       if (this.openOnHover) {
-        options.on = options.on || {};
-        options.on.mouseleave = this.mouseLeaveHandler;
+        options.on = options.on || {}
+        options.on.mouseleave = this.mouseLeaveHandler
       }
 
-      return this.$createElement('div', options, this.getContentSlot());
+      return this.$createElement('div', options, this.getContentSlot())
     },
     getTiles() {
-      if (!this.$refs.content) return;
+      if (!this.$refs.content) return
 
       this.tiles = Array.from(
         this.$refs.content.querySelectorAll('.v-list-item')
-      );
+      )
     },
     mouseEnterHandler() {
       this.runDelay('open', () => {
-        this.$emit('mouseEnterMenu');
+        this.$emit('mouseEnterMenu')
 
-        if (this.hasJustFocused) return;
+        if (this.hasJustFocused) return
 
-        this.hasJustFocused = true;
-      });
+        this.hasJustFocused = true
+      })
     },
     mouseLeaveHandler(e: MouseEvent) {
       // Prevent accidental re-activation
       this.runDelay('close', () => {
         setTimeout(() => {
           if (this.$refs.content.contains(e.relatedTarget as HTMLElement))
-            return;
-          if (this.isSubActivated) return;
+            return
+          if (this.isSubActivated) return
 
-          this.closeMenu();
-        }, 80);
-      });
+          this.closeMenu()
+        }, 80)
+      })
     },
     closeMenu() {
-      const _this = this;
+      const _this = this
 
       requestAnimationFrame(function() {
-        _this.$emit('mouseLeaveMenu');
+        _this.$emit('mouseLeaveMenu')
 
-        _this.isActive = false;
+        _this.isActive = false
 
-        _this.callDeactivate();
-      });
+        _this.callDeactivate()
+      })
     },
     nextTile() {
-      const tile = this.tiles[this.listIndex + 1];
+      const tile = this.tiles[this.listIndex + 1]
 
       if (!tile) {
-        if (!this.tiles.length) return;
+        if (!this.tiles.length) return
 
-        this.listIndex = -1;
-        this.nextTile();
+        this.listIndex = -1
+        this.nextTile()
 
-        return;
+        return
       }
 
-      this.listIndex++;
-      if (tile.tabIndex === -1) this.nextTile();
+      this.listIndex++
+      if (tile.tabIndex === -1) this.nextTile()
     },
     prevTile() {
-      const tile = this.tiles[this.listIndex - 1];
+      const tile = this.tiles[this.listIndex - 1]
 
       if (!tile) {
-        if (!this.tiles.length) return;
+        if (!this.tiles.length) return
 
-        this.listIndex = this.tiles.length;
-        this.prevTile();
+        this.listIndex = this.tiles.length
+        this.prevTile()
 
-        return;
+        return
       }
 
-      this.listIndex--;
-      if (tile.tabIndex === -1) this.prevTile();
+      this.listIndex--
+      if (tile.tabIndex === -1) this.prevTile()
     },
     lastTile() {
-      const tile = this.tiles[this.tiles.length - 1];
+      const tile = this.tiles[this.tiles.length - 1]
 
-      if (!tile) return;
+      if (!tile) return
 
-      this.listIndex = this.tiles.length - 1;
+      this.listIndex = this.tiles.length - 1
 
-      if (tile.tabIndex === -1) this.prevTile();
+      if (tile.tabIndex === -1) this.prevTile()
     },
     firstTile() {
-      const tile = this.tiles[0];
+      const tile = this.tiles[0]
 
-      if (!tile) return;
+      if (!tile) return
 
-      this.listIndex = 0;
+      this.listIndex = 0
 
-      if (tile.tabIndex === -1) this.nextTile();
+      if (tile.tabIndex === -1) this.nextTile()
     },
     onKeyDown(e: KeyboardEvent) {
       if (e.keyCode === keyCodes.esc) {
         // Wait for dependent elements to close first
         setTimeout(() => {
-          this.isActive = false;
-        });
-        const activator = this.getActivator();
-        this.$nextTick(() => activator && activator.focus());
+          this.isActive = false
+        })
+        const activator = this.getActivator()
+        this.$nextTick(() => activator && activator.focus())
       } else if (
         !this.isActive &&
         [keyCodes.up, keyCodes.down].includes(e.keyCode)
       ) {
-        this.isActive = true;
+        this.isActive = true
       }
 
       // Allow for isActive watcher to generate tile list
-      this.$nextTick(() => this.changeListIndex(e));
+      this.$nextTick(() => this.changeListIndex(e))
     },
     onResize() {
-      if (!this.isActive) return;
+      if (!this.isActive) return
 
       // Account for screen resize
       // and orientation change
       // eslint-disable-next-line no-unused-expressions
-      this.$refs.content.offsetWidth;
-      this.updateDimensions();
+      this.$refs.content.offsetWidth
+      this.updateDimensions()
 
       // When resizing to a smaller width
       // content width is evaluated before
       // the new activator width has been
       // set, causing it to not size properly
       // hacky but will revisit in the future
-      clearTimeout(this.resizeTimeout);
-      this.resizeTimeout = window.setTimeout(this.updateDimensions, 100);
+      clearTimeout(this.resizeTimeout)
+      this.resizeTimeout = window.setTimeout(this.updateDimensions, 100)
     }
   },
 
@@ -547,7 +547,7 @@ export default baseMixins.extend({
           value: this.onResize
         }
       ]
-    };
+    }
 
     return h('div', data, [
       !this.activator && this.genActivator(),
@@ -564,6 +564,6 @@ export default baseMixins.extend({
           [this.genTransition()]
         )
       ])
-    ]);
+    ])
   }
-});
+})
