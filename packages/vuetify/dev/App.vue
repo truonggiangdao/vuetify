@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-main>
+      app js 
       <playground></playground>
     </v-main>
   </v-app>
