@@ -19456,6 +19456,10 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
     transition: {
       type: [Boolean, String],
       default: 'v-menu-transition'
+    },
+    isSubActivated: {
+      type: Boolean,
+      default: false
     }
   },
   data: function data() {
@@ -19543,7 +19547,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
   },
   methods: {
     activate: function activate() {
-      var _this = this; // Update coordinates and dimensions of menu
+      var _this_1 = this; // Update coordinates and dimensions of menu
       // and its activator
 
 
@@ -19551,10 +19555,10 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
 
       requestAnimationFrame(function () {
         // Once transitioning, calculate scroll and top position
-        _this.startTransition().then(function () {
-          if (_this.$refs.content) {
-            _this.calculatedTopAuto = _this.calcTopAuto();
-            _this.auto && (_this.$refs.content.scrollTop = _this.calcScrollPosition());
+        _this_1.startTransition().then(function () {
+          if (_this_1.$refs.content) {
+            _this_1.calculatedTopAuto = _this_1.calcTopAuto();
+            _this_1.auto && (_this_1.$refs.content.scrollTop = _this_1.calcScrollPosition());
           }
         });
       });
@@ -19645,7 +19649,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
       }, [content]);
     },
     genDirectives: function genDirectives() {
-      var _this = this;
+      var _this_1 = this;
 
       var directives = [{
         name: 'show',
@@ -19657,11 +19661,11 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
           name: 'click-outside',
           value: {
             handler: function handler() {
-              _this.isActive = false;
+              _this_1.isActive = false;
             },
             closeConditional: this.closeConditional,
             include: function include() {
-              return __spread([_this.$el], _this.getOpenDependentElements());
+              return __spread([_this_1.$el], _this_1.getOpenDependentElements());
             }
           }
         });
@@ -19672,7 +19676,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
     genContent: function genContent() {
       var _a;
 
-      var _this = this;
+      var _this_1 = this;
 
       var options = {
         attrs: __assign(__assign({}, this.getScopeIdAttrs()), {
@@ -19691,7 +19695,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
           click: function click(e) {
             var target = e.target;
             if (target.getAttribute('disabled')) return;
-            if (_this.closeOnContentClick) _this.isActive = false;
+            if (_this_1.closeOnContentClick) _this_1.isActive = false;
           },
           keydown: this.onKeyDown
         }
@@ -19719,24 +19723,37 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
       this.tiles = Array.from(this.$refs.content.querySelectorAll('.v-list-item'));
     },
     mouseEnterHandler: function mouseEnterHandler() {
-      var _this = this;
+      var _this_1 = this;
 
       this.runDelay('open', function () {
-        if (_this.hasJustFocused) return;
-        _this.hasJustFocused = true;
+        _this_1.$emit('mouseEnterMenu');
+
+        if (_this_1.hasJustFocused) return;
+        _this_1.hasJustFocused = true;
       });
     },
     mouseLeaveHandler: function mouseLeaveHandler(e) {
-      var _this = this; // Prevent accidental re-activation
+      var _this_1 = this; // Prevent accidental re-activation
 
 
       this.runDelay('close', function () {
-        if (_this.$refs.content.contains(e.relatedTarget)) return;
-        requestAnimationFrame(function () {
-          _this.isActive = false;
+        setTimeout(function () {
+          if (_this_1.$refs.content.contains(e.relatedTarget)) return;
+          if (_this_1.isSubActivated) return;
 
-          _this.callDeactivate();
-        });
+          _this_1.closeMenu();
+        }, 80);
+      });
+    },
+    closeMenu: function closeMenu() {
+      var _this = this;
+
+      requestAnimationFrame(function () {
+        _this.$emit('mouseLeaveMenu');
+
+        _this.isActive = false;
+
+        _this.callDeactivate();
       });
     },
     nextTile: function nextTile() {
@@ -19778,12 +19795,12 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
       if (tile.tabIndex === -1) this.nextTile();
     },
     onKeyDown: function onKeyDown(e) {
-      var _this = this;
+      var _this_1 = this;
 
       if (e.keyCode === _util_helpers__WEBPACK_IMPORTED_MODULE_15__["keyCodes"].esc) {
         // Wait for dependent elements to close first
         setTimeout(function () {
-          _this.isActive = false;
+          _this_1.isActive = false;
         });
         var activator_1 = this.getActivator();
         this.$nextTick(function () {
@@ -19795,7 +19812,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
 
 
       this.$nextTick(function () {
-        return _this.changeListIndex(e);
+        return _this_1.changeListIndex(e);
       });
     },
     onResize: function onResize() {
@@ -19815,7 +19832,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
     }
   },
   render: function render(h) {
-    var _this = this;
+    var _this_1 = this;
 
     var data = {
       staticClass: 'v-menu',
@@ -19829,13 +19846,13 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_13__["default"])(_
       }]
     };
     return h('div', data, [!this.activator && this.genActivator(), this.showLazyContent(function () {
-      return [_this.$createElement(_VThemeProvider__WEBPACK_IMPORTED_MODULE_1__["VThemeProvider"], {
+      return [_this_1.$createElement(_VThemeProvider__WEBPACK_IMPORTED_MODULE_1__["VThemeProvider"], {
         props: {
           root: true,
-          light: _this.light,
-          dark: _this.dark
+          light: _this_1.light,
+          dark: _this_1.dark
         }
-      }, [_this.genTransition()])];
+      }, [_this_1.genTransition()])];
     })]);
   }
 }));

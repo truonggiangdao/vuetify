@@ -1,19 +1,19 @@
 // Mixins
-import DatePickerTable from "./mixins/date-picker-table";
+import DatePickerTable from './mixins/date-picker-table';
 
 // Utils
-import { pad, createNativeLocaleFormatter } from "./util";
-import mixins from "../../util/mixins";
+import { pad, createNativeLocaleFormatter } from './util';
+import mixins from '../../util/mixins';
 
 // Types
-import { VNode } from "vue";
-import { DatePickerFormatter } from "vuetify/types";
+import { VNode } from 'vue';
+import { DatePickerFormatter } from 'vuetify/types';
 
 export default mixins(
   DatePickerTable
   /* @vue/component */
 ).extend({
-  name: "v-date-picker-month-table",
+  name: 'v-date-picker-month-table',
 
   computed: {
     formatter(): DatePickerFormatter {
@@ -21,7 +21,7 @@ export default mixins(
         this.format ||
         createNativeLocaleFormatter(
           this.currentLocale,
-          { month: "short", timeZone: "UTC" },
+          { month: 'short', timeZone: 'UTC' },
           { start: 5, length: 2 }
         )
       );
@@ -42,17 +42,17 @@ export default mixins(
           const month = row * cols.length + col;
           const date = `${this.displayedYear}-${pad(month + 1)}`;
           return this.$createElement(
-            "td",
+            'td',
             {
               key: month
             },
-            [this.genButton(date, false, "month", this.formatter)]
+            [this.genButton(date, false, 'month', this.formatter)]
           );
         });
 
         children.push(
           this.$createElement(
-            "tr",
+            'tr',
             {
               key: row
             },
@@ -61,13 +61,13 @@ export default mixins(
         );
       }
 
-      return this.$createElement("tbody", children);
+      return this.$createElement('tbody', children);
     }
   },
 
   render(): VNode {
     return this.genTable(
-      "v-date-picker-table v-date-picker-table--month",
+      'v-date-picker-table v-date-picker-table--month',
       [this.genTBody()],
       this.calculateTableDate
     );

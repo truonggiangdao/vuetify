@@ -1,6 +1,6 @@
 {
   "name": "vuetify",
-  "version": "2.4.11",
+  "version": "2.4.12",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -8,8 +8,7 @@
   "husky": {
     "hooks": {
       "prepare-commit-msg": "node scripts/prepare-commit-message.js",
-      "commit-msg": "node scripts/lint-commit-message.js",
-      "pre-commit": "node scripts/warn-npm-install.js && yarn run lint --since HEAD && yarn lerna run test --since HEAD"
+      "commit-msg": "node scripts/lint-commit-message.js"
     }
   },
   "scripts": {

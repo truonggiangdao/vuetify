@@ -5069,7 +5069,7 @@
               "name": "start",
               "description": "The starting date on the calendar (inclusive) in the format of `YYYY-MM-DD`. This may be ignored depending on the `type` of the calendar.",
               "doc-url": "https://www.vuetifyjs.com/api/v-calendar#props",
-              "default": "2021-05-11",
+              "default": "2021-11-26",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -6698,7 +6698,7 @@
               "name": "start",
               "description": "The starting date on the calendar (inclusive) in the format of `YYYY-MM-DD`. This may be ignored depending on the `type` of the calendar.",
               "doc-url": "https://www.vuetifyjs.com/api/v-calendar-daily#props",
-              "default": "2021-05-11",
+              "default": "2021-11-26",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -6916,7 +6916,7 @@
               "name": "start",
               "description": "The starting date on the calendar (inclusive) in the format of `YYYY-MM-DD`. This may be ignored depending on the `type` of the calendar.",
               "doc-url": "https://www.vuetifyjs.com/api/v-calendar-weekly#props",
-              "default": "2021-05-11",
+              "default": "2021-11-26",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -7134,7 +7134,7 @@
               "name": "start",
               "description": "The starting date on the calendar (inclusive) in the format of `YYYY-MM-DD`. This may be ignored depending on the `type` of the calendar.",
               "doc-url": "https://www.vuetifyjs.com/api/v-calendar-monthly#props",
-              "default": "2021-05-11",
+              "default": "2021-11-26",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -19793,6 +19793,17 @@
             {
               "name": "internal-activator",
               "description": "Detaches the menu content inside of the component as opposed to the document.",
+              "doc-url": "https://www.vuetifyjs.com/api/v-menu#props",
+              "default": "false",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              },
+              "type": "boolean"
+            },
+            {
+              "name": "is-sub-activated",
+              "description": "",
               "doc-url": "https://www.vuetifyjs.com/api/v-menu#props",
               "default": "false",
               "value": {
